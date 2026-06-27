@@ -82,13 +82,13 @@ unmatched key must be logged.
 - **M3**: Analysis — 6 figures, 3 regressions, robustness battery
 - **M4**: Write-up — policy memo, methodology.md, data dictionary, dashboard
 
-## Open decisions (present at M1 gate)
+## Open decisions (RESOLVED at M1 gate, 2026-06-27)
 
-1. AEI release: `release_2026_03_24` vs `release_2026_06_26`
-2. Primary angle: health-sector (recommended) vs alternative
-3. Wage measure: mean vs median as primary
-4. Admin/clinical tagging: rule-based (GWA/DWA) vs LLM-classification for headline
-5. Geographic cut: now vs stretch goal
+1. AEI release: **labor_market_impacts/** (stable dir); release_2026_03_24 for robustness
+2. Primary angle: **health-sector** (SOC 29 + 31, admin-vs-clinical)
+3. Wage measure: **median** primary, mean as robustness
+4. Admin/clinical tagging: **rule-based (GWA/DWA)** for headline, LLM as robustness
+5. Geographic cut: **deferred** to stretch goal
 
 ## Decisions log
 
@@ -103,6 +103,11 @@ unmatched key must be logged.
 | 2026-06-27 | AEI job_exposure.csv is in labor_market_impacts/ | Not in the release_* folders; separate stable directory in HF repo |
 | 2026-06-27 | Eloundou data at OPENAI/gpts-are-gpts | occ_level.csv; β = dv_rating_beta column; 923 O*NET-SOC codes |
 | 2026-06-27 | BLS OEWS requires manual download | bls.gov blocks all automated requests (403); user must download via browser |
+| 2026-06-27 | AEI: pin labor_market_impacts/ | Stable directory; release_2026_03_24 for robustness if needed |
+| 2026-06-27 | Primary angle: health-sector | SOC major groups 29 + 31; admin-vs-clinical decomposition |
+| 2026-06-27 | Wage: median primary | More robust to right-skewed healthcare wages; mean as robustness |
+| 2026-06-27 | Admin/clinical: rule-based headline | GWA/DWA mapping is transparent + reproducible; LLM as robustness pass |
+| 2026-06-27 | Geographic cut: deferred | Stretch goal; doesn't strengthen headline finding |
 
 ## Running this project
 

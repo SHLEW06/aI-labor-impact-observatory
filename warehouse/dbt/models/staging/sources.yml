@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw tables loaded by src/ingest.py into DuckDB"
+    schema: main
+    tables:
+      - name: raw_onet_task_statements
+        description: "O*NET 30.3 task statements (~18,796 rows)"
+      - name: raw_onet_task_ratings
+        description: "O*NET 30.3 task ratings — Importance, Frequency (~161K rows)"
+      - name: raw_onet_occupation_data
+        description: "O*NET 30.3 occupation codes and titles (1,016 rows)"
+      - name: raw_onet_work_activities
+        description: "O*NET 30.3 work activity ratings by occupation (~73K rows)"
+      - name: raw_onet_tasks_to_dwas
+        description: "O*NET 30.3 tasks to Detailed Work Activities crosswalk (~23K rows)"
+      - name: raw_onet_gwas_to_iwas_to_dwas
+        description: "O*NET 30.3 GWA → IWA → DWA hierarchy (2,087 rows)"
+      - name: raw_onet_job_zones
+        description: "O*NET 30.3 Job Zones by occupation (923 rows)"
+      - name: raw_onet_soc_crosswalk
+        description: "O*NET-SOC 2019 → 2018 SOC crosswalk (1,016 rows)"
+      - name: raw_oews
+        description: "BLS OEWS May 2025 national wages & employment"
+      - name: raw_aei_job_exposure
+        description: "Anthropic Economic Index — observed AI exposure by occupation (756 rows)"
+      - name: raw_aei_task_penetration
+        description: "Anthropic Economic Index — AI penetration by task (~18K rows)"
+      - name: raw_eloundou
+        description: "Eloundou et al. theoretical LLM exposure scores (923 rows)"

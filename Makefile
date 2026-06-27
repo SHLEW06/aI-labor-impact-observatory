@@ -19,8 +19,8 @@ download:
 	$(PYTHON) src/ingest.py
 
 build:
-	cd $(DBT_DIR) && $(DBT) run
-	cd $(DBT_DIR) && $(DBT) test
+	cd $(DBT_DIR) && ../../$(DBT) run
+	cd $(DBT_DIR) && ../../$(DBT) test
 
 analyze:
 	$(PYTHON) analysis/01_descriptives.py

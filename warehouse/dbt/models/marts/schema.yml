@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: mart_occupation_exposure
+    description: >
+      One row per 6-digit 2018 SOC code. Carries theoretical exposure (Eloundou β),
+      observed exposure (AEI), the diffusion gap, wages, employment, education proxy,
+      and admin/clinical shares for healthcare occupations.
+      FRAMING: exposure is potential capability, not realized job loss.
+    columns:
+      - name: soc_code
+        description: "6-digit 2018 SOC code (primary key)"
+        tests:
+          - unique
+          - not_null
+      - name: soc_title
+        description: "Occupation title from SOC/OEWS"
+        tests:
+          - not_null
+      - name: major_group
+        description: "SOC major group (e.g., 29-0000)"
+        tests:
+          - not_null
+      - name: is_health
+        description: "True for SOC major groups 29 (Practitioners) and 31 (Support)"
+        tests:
+          - not_null
+      - name: theoretical_exposure
+        description: "Eloundou β = E1 + 0.5*E2, averaged across O*NET-SOC variants"
+      - name: observed_exposure
+        description: "AEI observed AI usage score (756 of 798 occupations)"
+      - name: diffusion_gap
+        description: "theoretical - observed; positive = latent unrealized potential"
+      - name: job_zone
+        description: "O*NET Job Zone (education proxy), 2-5"
+        tests:
+          - accepted_values:
+              arguments:
+                values: [2, 3, 4, 5]
+      - name: suppressed
+        description: "True if any OEWS wage/employment cell is suppressed"
+        tests:
+          - not_null
+      - name: admin_share
+        description: "Importance-weighted share of tasks tagged as admin (via GWA/DWA)"
+      - name: clinical_share
+        description: "Importance-weighted share of tasks tagged as clinical (via GWA/DWA)"
