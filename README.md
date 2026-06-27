@@ -6,7 +6,13 @@ This project measures the gap between what LLMs *could* automate (theoretical ex
 
 ## Key finding
 
-*To be filled after analysis (M3).*
+Within healthcare, **AI usage concentrates on administrative tasks, not clinical ones.** The correlation between an occupation's administrative task share and its observed AI exposure is 0.76. Admin-heavy healthcare occupations (medical transcriptionists, medical records specialists) show observed AI usage 5x higher than clinical-heavy ones (surgeons, physical therapists). In regression, a 10pp increase in admin task share associates with 6.2pp higher AI usage (p < 0.001, R-squared = 0.58), while education level is not significant. Meanwhile, healthcare as a whole is *under-adopting* relative to theoretical potential — its diffusion gap (0.27) exceeds the economy-wide average (0.25).
+
+![Theoretical vs. Observed AI Exposure](figures/fig2_theoretical_vs_observed.png)
+*Most occupations sit well below the 45-degree line. Healthcare (red) clusters low on observed usage despite moderate theoretical exposure.*
+
+![Healthcare: Admin Share vs. Observed AI Usage](figures/fig5_health_admin_vs_observed.png)
+*Within healthcare, observed AI usage tracks administrative task share. Medical Records Specialists and Medical Transcriptionists are clear outliers; clinical-heavy occupations cluster near zero.*
 
 ## Data sources
 
@@ -21,12 +27,12 @@ This project measures the gap between what LLMs *could* automate (theoretical ex
 ## Reproducibility
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
-make all   # download -> build -> analyze -> figures
+make setup            # creates venv + installs deps
+source .venv/bin/activate
+make all              # download -> build -> analyze -> figures
 ```
 
-`make all` reproduces the entire pipeline — raw data acquisition through final figures and regression outputs — from a clean clone. No manual steps.
+`make all` reproduces the entire pipeline — raw data download, dbt staging/intermediate/mart build with 10 data-quality tests, descriptive statistics, regressions, and 6 publication figures. One manual step: BLS OEWS data must be downloaded via browser (BLS blocks automated requests) and saved to `data_raw/oews/national_M2025_dl.xlsx`. The pipeline runs without it but wage/employment columns will be NULL.
 
 ## Methodology
 
