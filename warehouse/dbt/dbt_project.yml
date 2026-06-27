@@ -1,0 +1,24 @@
+name: 'ai_labor_observatory'
+version: '0.1.0'
+config-version: 2
+
+profile: 'ai_labor_observatory'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+models:
+  ai_labor_observatory:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

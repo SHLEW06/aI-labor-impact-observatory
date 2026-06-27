@@ -1,0 +1,7 @@
+ai_labor_observatory:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../aei.duckdb"
+      threads: 4

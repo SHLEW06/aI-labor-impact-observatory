@@ -1,0 +1,38 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+src/*.egg-info/
+dist/
+build/
+
+# Data (immutable pulls — tracked via SOURCES.md, not git)
+data_raw/onet/
+data_raw/oews/
+data_raw/aei/
+data_raw/exposure/
+
+# DuckDB warehouse
+warehouse/*.duckdb
+warehouse/*.duckdb.wal
+
+# dbt
+warehouse/dbt/target/
+warehouse/dbt/logs/
+warehouse/dbt/dbt_packages/
+warehouse/dbt/.user.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/

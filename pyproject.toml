@@ -1,0 +1,29 @@
+[project]
+name = "ai-labor-impact-observatory"
+version = "0.1.0"
+description = "Reproducible empirical study measuring theoretical vs. observed LLM exposure across U.S. occupations, with a health-sector focus."
+requires-python = ">=3.10,<3.14"
+license = "MIT"
+dependencies = [
+    "duckdb>=1.2",
+    "dbt-core>=1.9",
+    "dbt-duckdb>=1.9",
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "statsmodels>=0.14",
+    "linearmodels>=6.0",
+    "matplotlib>=3.8",
+    "plotly>=5.18",
+    "huggingface_hub>=0.20",
+    "openpyxl>=3.1",
+    "pyarrow>=14.0",
+    "pytest>=8.0",
+    "requests>=2.31",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
