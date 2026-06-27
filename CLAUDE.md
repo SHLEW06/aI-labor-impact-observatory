@@ -98,6 +98,11 @@ unmatched key must be logged.
 | 2026-06-27 | Job Zone range 1-4 | O*NET 30.2+ moved from 5-level to 4-level framework |
 | 2026-06-27 | DuckDB + dbt-duckdb | Zero-config warehouse; lightest path to real analytics engineering |
 | 2026-06-27 | Python 3.12 (not 3.14) | dbt-common/mashumaro incompatible with 3.14; 3.12 is the stable choice |
+| 2026-06-27 | Job Zones are {2,3,4,5} not {1,2,3,4} | O*NET 30.2+ dropped Zone 1, kept numbering; accepted_values test set accordingly |
+| 2026-06-27 | Naive truncation = official crosswalk | Zero mismatches across all 1,016 codes; still use official crosswalk as authority |
+| 2026-06-27 | AEI job_exposure.csv is in labor_market_impacts/ | Not in the release_* folders; separate stable directory in HF repo |
+| 2026-06-27 | Eloundou data at OPENAI/gpts-are-gpts | occ_level.csv; β = dv_rating_beta column; 923 O*NET-SOC codes |
+| 2026-06-27 | BLS OEWS requires manual download | bls.gov blocks all automated requests (403); user must download via browser |
 
 ## Running this project
 
