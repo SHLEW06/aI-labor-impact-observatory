@@ -252,7 +252,9 @@ def update_sources_md():
         "## BLS OEWS (May 2025)",
         "",
         "- **Source:** https://www.bls.gov/oes/tables.htm",
-        "- **Version:** May 2025 (released May 15, 2026)",
+        "- **Bulk archive:** https://www.bls.gov/oes/special-requests/oesm25nat.zip",
+        "- **Reference period:** May 2025 (survey reference month)",
+        "- **Release date:** 2026-05-15 (BLS announcement)",
         "- **License:** Public domain (U.S. Government work)",
         "- **Files:**",
     ])
@@ -263,11 +265,14 @@ def update_sources_md():
         for f in oews_files:
             checksum = sha256(f)
             lines.append(
-                f"  - [x] {f.name} — SHA-256: `{checksum}` | Downloaded: `{today}`"
+                f"  - [x] {f.name} — URL: `https://www.bls.gov/oes/special-requests/oesm25nat.zip` "
+                f"(extracted from `oesm25nat.zip`) | Reference period: May 2025 | "
+                f"SHA-256: `{checksum}` | Downloaded: `{today}`"
             )
     else:
         lines.append(
-            "  - [ ] national_M2025_dl.xlsx — Manual download required | "
+            "  - [ ] national_M2025_dl.xlsx — Manual download required from "
+            "`https://www.bls.gov/oes/special-requests/oesm25nat.zip` | "
             "SHA-256: `TBD` | Downloaded: `TBD`"
         )
 
