@@ -98,11 +98,13 @@ BLS Occupational Employment and Wage Statistics (OEWS), May 2025 release. Fields
 
 ## Regressions
 
-Three OLS regressions with HC1 (heteroskedasticity-consistent) robust standard errors. Employment-weighted (WLS) when OEWS data is available, unweighted otherwise.
+Three regressions. The **canonical specification** is **WLS employment-weighted by `tot_emp`** (BLS OEWS total employment) with **HC1 robust standard errors**, run on the common sample where the outcome, all covariates, `a_median`, and `tot_emp` are non-null (n = 752 full-sample; n = 81 health-only). This matches the project's §4 spec (employment-weighted, robust SEs).
 
-1. **Full sample:** `observed_exposure ~ log(median_wage) + job_zone + is_health + admin_share`
-2. **Full sample:** `diffusion_gap ~ is_health + log(median_wage) + job_zone`
-3. **Health-only:** `observed_exposure ~ admin_share + log(median_wage) + job_zone`
+1. **Full sample (R1):** `observed_exposure ~ log(a_median) + job_zone + is_health + admin_share`
+2. **Full sample (R2):** `diffusion_gap ~ is_health + log(a_median) + job_zone`
+3. **Health-only (R3):** `observed_exposure ~ admin_share + log(a_median) + job_zone`
+
+For each spec we additionally emit a 2×2 decomposition — {OLS, WLS} × {no log_wage, +log_wage} — on the same common sample, so the wage-covariate effect and the weighting effect can be read independently. The full table is in `reports/regressions.txt`. The headline numbers cited in `reports/policy_memo.md` and `README.md` are the canonical WLS+log(wage) cells.
 
 These are cross-sectional associations, not causal estimates. We do not claim that admin task composition *causes* higher AI adoption; the relationship may reflect selection effects, task characteristics that facilitate automation, or institutional factors.
 

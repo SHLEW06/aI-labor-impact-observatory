@@ -66,7 +66,9 @@ The pattern is strikingly visible at the extremes:
 - **Oral and Maxillofacial Surgeons** (admin_share = 0.00, clinical_share = 0.84): observed exposure = 0.00
 - **Surgical Assistants** (admin_share = 0.00, clinical_share = 0.57): observed exposure = 0.00
 
-In a regression of observed exposure on admin_share and job_zone for health occupations only, admin_share carries a coefficient of **0.62** (p < 0.001, R-squared = 0.58). A 10 percentage-point increase in admin task share is associated with 6.2 percentage points higher observed AI usage. Job zone (education level) is not statistically significant in this model (p = 0.21), suggesting that within healthcare, task composition matters more than education requirements for predicting where AI is actually used.
+In the canonical regression of observed exposure on admin_share, log(median wage), and job_zone for health occupations only — **WLS employment-weighted by total employment, HC1 robust standard errors** (n = 81) — admin_share carries a coefficient of **0.52** (p = 0.033, R² = 0.42). A 10 percentage-point increase in admin task share is associated with **5.2 percentage points** higher observed AI usage. Neither log(wage) (β = 0.020, p = 0.49) nor job_zone (β = 0.015, p = 0.45) is statistically significant, suggesting that within healthcare, task composition matters more than education or pay for predicting where AI is actually used.
+
+The unweighted OLS version of the same regression gives a larger admin_share coefficient (0.62, p < 0.001, R² = 0.58, "10pp → 6.2pp"). The 2×2 decomposition in `reports/regressions.txt` isolates the source: adding log(wage) shifts admin_share by under 2% under either estimator (OLS: 0.624 → 0.628; WLS: 0.511 → 0.519), so the attenuation under WLS is the **employment-weighting effect**, not the wage control. We report WLS as canonical per spec §4 (employment-weighted, robust SEs) but the OLS magnitudes are visible for transparency.
 
 ### 3.4 Education and wage gradients
 
@@ -81,14 +83,15 @@ Across all occupations, both theoretical and observed exposure increase with edu
 
 The theoretical-observed gap is largest for Zone 4 (Bachelor's-level) occupations. Zone 5 occupations (graduate/professional degrees) have slightly lower theoretical exposure than Zone 4 but still substantial observed usage — consistent with knowledge-intensive work having both high potential and meaningful barriers to adoption.
 
-In the full-sample regression (R1), a healthcare dummy carries a coefficient of **-0.077** (p < 0.001) — healthcare occupations show significantly lower observed AI usage even after controlling for job zone and admin task share. This is the regression-adjusted version of the descriptive finding: healthcare is under-adopting relative to its theoretical potential.
+In the full-sample canonical regression (R1, WLS, n = 752), a healthcare dummy carries a coefficient of **-0.142** (p < 0.001) — healthcare occupations show significantly lower observed AI usage even after controlling for log(wage), job zone, and admin task share. (Under unweighted OLS the coefficient is -0.077, p < 0.001; same direction, smaller magnitude.) This is the regression-adjusted version of the descriptive finding: healthcare is under-adopting relative to its theoretical potential.
 
 ---
 
 ## 4. Robustness
 
 The admin-share result is stable across specifications:
-- The bivariate correlation (0.76) is consistent with the multivariate coefficient (0.62).
+- The bivariate correlation (0.76) is consistent with the multivariate coefficient (0.52 under canonical WLS; 0.62 under unweighted OLS — both significant, same sign, same story).
+- Adding log(wage) as a covariate shifts admin_share by under 2% under either estimator; the wage control does not absorb the admin-share signal (full 2×2 decomposition in `reports/regressions.txt`).
 - Replacing importance-weighted shares with unweighted count-based shares produces qualitatively identical results.
 - The 4 false-negative clinical tasks in validation (clinical tasks misclassified as "other") would, if corrected, *increase* the admin-share coefficient slightly — our conservative tagger biases toward the null.
 - Alternative theoretical exposure measures (E1-only, E1+E2, human-only beta) shift magnitudes but not the direction or significance of the admin-share finding.
