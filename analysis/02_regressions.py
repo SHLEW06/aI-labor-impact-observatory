@@ -9,6 +9,10 @@ Regressions (per spec §4):
 All use robust (HC1) standard errors.
 Employment-weighted when OEWS data is available.
 
+When OEWS wages are present we ALSO run the no-wage variant on the same
+covariates so old-vs-new comparisons (and the impact of dropped suppressed/
+unmatched rows on the sample) are explicit.
+
 FRAMING: Exposure is potential capability, not realized job loss.
 These regressions describe cross-sectional associations, NOT causal effects.
 """
@@ -63,92 +67,163 @@ def run_wls(y: pd.Series, X: pd.DataFrame, weights: pd.Series | None,
     if weights is not None:
         print(f"  Weighted: employment (tot_emp)")
     else:
-        print(f"  Unweighted (OEWS employment not available)")
+        print(f"  Unweighted")
     print(f"  Robust SEs: HC1")
     print()
     print(result.summary2().tables[1].to_string(float_format="{:.4f}".format))
+    print()
     return result
 
 
-def regression1(df: pd.DataFrame) -> None:
-    """R1: observed_exposure ~ log(wage) + job_zone + is_health + admin_share"""
+def regression1(df: pd.DataFrame) -> tuple:
+    """R1: observed_exposure ~ [log(wage) +] job_zone + is_health + admin_share
+
+    Always runs the no-wage variant. If OEWS wages are present, also runs
+    the with-wage variant on the wage-non-null subsample.
+    """
     section("REGRESSION 1: Observed Exposure (full sample)")
 
-    has_wages = df["a_median"].notna().any()
-    if not has_wages:
-        print("  OEWS wages not loaded. Running without log(wage) — partial specification.")
-        print("  Download OEWS and re-run for the full model.\n")
-
     valid = df[df["observed_exposure"].notna()].copy()
+    has_wages = valid["a_median"].notna().any()
 
-    # Build X
-    X_cols = {}
+    # --- OLD (no wage) — full sample, unweighted ---
+    print("--- OLD (no log_wage covariate, unweighted) ---")
+    X_old = pd.DataFrame({
+        "job_zone": valid["job_zone"],
+        "is_health": valid["is_health"].astype(int),
+        "admin_share": valid["admin_share"].fillna(0),
+    }, index=valid.index)
+    r_old = run_wls(
+        valid["observed_exposure"], X_old, weights=None,
+        label="observed_exposure ~ job_zone + is_health + admin_share",
+    )
+
+    r_new = None
     if has_wages:
-        valid = valid[valid["a_median"].notna() & (valid["a_median"] > 0)]
-        X_cols["log_wage"] = np.log(valid["a_median"])
-    X_cols["job_zone"] = valid["job_zone"]
-    X_cols["is_health"] = valid["is_health"].astype(int)
-    X_cols["admin_share"] = valid["admin_share"].fillna(0)
+        # --- NEW (with log_wage) — wage-non-null subsample, employment-weighted ---
+        print("--- NEW (with log_wage, employment-weighted) ---")
+        sub = valid[valid["a_median"].notna() & (valid["a_median"] > 0)].copy()
+        X_new = pd.DataFrame({
+            "log_wage": np.log(sub["a_median"]),
+            "job_zone": sub["job_zone"],
+            "is_health": sub["is_health"].astype(int),
+            "admin_share": sub["admin_share"].fillna(0),
+        }, index=sub.index)
+        r_new = run_wls(
+            sub["observed_exposure"], X_new, weights=sub["tot_emp"],
+            label="observed_exposure ~ log(wage) + job_zone + is_health + admin_share",
+        )
+    return r_old, r_new
 
-    X = pd.DataFrame(X_cols, index=valid.index)
-    y = valid["observed_exposure"]
-    weights = valid["tot_emp"] if has_wages else None
 
-    run_wls(y, X, weights, "observed_exposure ~ " +
-            ("log(wage) + " if has_wages else "") +
-            "job_zone + is_health + admin_share")
-
-
-def regression2(df: pd.DataFrame) -> None:
-    """R2: diffusion_gap ~ is_health + log(wage) + job_zone"""
+def regression2(df: pd.DataFrame) -> tuple:
+    """R2: diffusion_gap ~ is_health + [log(wage) +] job_zone"""
     section("REGRESSION 2: Diffusion Gap (full sample)")
 
-    has_wages = df["a_median"].notna().any()
-    if not has_wages:
-        print("  OEWS wages not loaded. Running without log(wage) — partial specification.\n")
-
     valid = df[df["diffusion_gap"].notna()].copy()
+    has_wages = valid["a_median"].notna().any()
 
-    X_cols = {}
-    X_cols["is_health"] = valid["is_health"].astype(int)
+    print("--- OLD (no log_wage covariate, unweighted) ---")
+    X_old = pd.DataFrame({
+        "is_health": valid["is_health"].astype(int),
+        "job_zone": valid["job_zone"],
+    }, index=valid.index)
+    r_old = run_wls(
+        valid["diffusion_gap"], X_old, weights=None,
+        label="diffusion_gap ~ is_health + job_zone",
+    )
+
+    r_new = None
     if has_wages:
-        valid = valid[valid["a_median"].notna() & (valid["a_median"] > 0)]
-        X_cols["log_wage"] = np.log(valid["a_median"])
-    X_cols["job_zone"] = valid["job_zone"]
+        print("--- NEW (with log_wage, employment-weighted) ---")
+        sub = valid[valid["a_median"].notna() & (valid["a_median"] > 0)].copy()
+        X_new = pd.DataFrame({
+            "is_health": sub["is_health"].astype(int),
+            "log_wage": np.log(sub["a_median"]),
+            "job_zone": sub["job_zone"],
+        }, index=sub.index)
+        r_new = run_wls(
+            sub["diffusion_gap"], X_new, weights=sub["tot_emp"],
+            label="diffusion_gap ~ is_health + log(wage) + job_zone",
+        )
+    return r_old, r_new
 
-    X = pd.DataFrame(X_cols, index=valid.index)
-    y = valid["diffusion_gap"]
-    weights = valid["tot_emp"] if has_wages else None
 
-    run_wls(y, X, weights, "diffusion_gap ~ is_health + " +
-            ("log(wage) + " if has_wages else "") +
-            "job_zone")
-
-
-def regression3(df: pd.DataFrame) -> None:
-    """R3: Health-only: observed_exposure ~ admin_share + log(wage) + job_zone"""
+def regression3(df: pd.DataFrame) -> tuple:
+    """R3: Health-only: observed_exposure ~ admin_share + [log(wage) +] job_zone"""
     section("REGRESSION 3: Observed Exposure (health-sector only)")
 
     h = df[df["is_health"] & df["observed_exposure"].notna()].copy()
     has_wages = h["a_median"].notna().any()
 
-    if not has_wages:
-        print("  OEWS wages not loaded. Running without log(wage) — partial specification.\n")
+    print("--- OLD (no log_wage covariate, unweighted) ---")
+    X_old = pd.DataFrame({
+        "admin_share": h["admin_share"],
+        "job_zone": h["job_zone"],
+    }, index=h.index)
+    r_old = run_wls(
+        h["observed_exposure"], X_old, weights=None,
+        label="observed_exposure ~ admin_share + job_zone  [health only]",
+    )
 
-    X_cols = {}
-    X_cols["admin_share"] = h["admin_share"]
+    r_new = None
     if has_wages:
-        h = h[h["a_median"].notna() & (h["a_median"] > 0)]
-        X_cols["log_wage"] = np.log(h["a_median"])
-    X_cols["job_zone"] = h["job_zone"]
+        print("--- NEW (with log_wage, employment-weighted) ---")
+        sub = h[h["a_median"].notna() & (h["a_median"] > 0)].copy()
+        X_new = pd.DataFrame({
+            "admin_share": sub["admin_share"],
+            "log_wage": np.log(sub["a_median"]),
+            "job_zone": sub["job_zone"],
+        }, index=sub.index)
+        r_new = run_wls(
+            sub["observed_exposure"], X_new, weights=sub["tot_emp"],
+            label="observed_exposure ~ admin_share + log(wage) + job_zone  [health only]",
+        )
+    return r_old, r_new
 
-    X = pd.DataFrame(X_cols, index=h.index)
-    y = h["observed_exposure"]
-    weights = h["tot_emp"] if has_wages else None
 
-    run_wls(y, X, weights, "observed_exposure ~ admin_share + " +
-            ("log(wage) + " if has_wages else "") +
-            "job_zone  [health only]")
+def comparison_table(results: dict) -> None:
+    """Print a compact side-by-side comparison of OLD vs NEW coefficients."""
+    section("OLD vs NEW: side-by-side comparison")
+    print("Note: NEW restricts to OEWS wage-non-null rows AND weights by employment;")
+    print("OLD uses the full sample, unweighted. Different samples → not nested tests.\n")
+
+    for spec, (r_old, r_new) in results.items():
+        print(f"--- {spec} ---")
+        rows = []
+        if r_old is not None:
+            for name in r_old.params.index:
+                rows.append({
+                    "term": name,
+                    "OLD coef": r_old.params[name],
+                    "OLD SE": r_old.bse[name],
+                    "OLD p": r_old.pvalues[name],
+                })
+        if r_new is not None:
+            new_terms = {}
+            for name in r_new.params.index:
+                new_terms[name] = {
+                    "NEW coef": r_new.params[name],
+                    "NEW SE": r_new.bse[name],
+                    "NEW p": r_new.pvalues[name],
+                }
+            seen = set(r["term"] for r in rows)
+            for r in rows:
+                if r["term"] in new_terms:
+                    r.update(new_terms[r["term"]])
+            for term, vals in new_terms.items():
+                if term not in seen:
+                    row = {"term": term, "OLD coef": None, "OLD SE": None, "OLD p": None}
+                    row.update(vals)
+                    rows.append(row)
+
+        n_old = int(r_old.nobs) if r_old is not None else None
+        n_new = int(r_new.nobs) if r_new is not None else None
+        tbl = pd.DataFrame(rows)
+        cols = ["term", "OLD coef", "OLD SE", "OLD p", "NEW coef", "NEW SE", "NEW p"]
+        tbl = tbl.reindex(columns=cols)
+        print(tbl.to_string(index=False, float_format=lambda x: f"{x:.4f}" if pd.notna(x) else " "))
+        print(f"  n_old = {n_old}    n_new = {n_new}\n")
 
 
 def main() -> None:
@@ -157,9 +232,12 @@ def main() -> None:
     print(f"Generated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}")
 
     df = load_mart()
-    regression1(df)
-    regression2(df)
-    regression3(df)
+    results = {}
+    results["R1: observed_exposure (full)"]   = regression1(df)
+    results["R2: diffusion_gap (full)"]       = regression2(df)
+    results["R3: observed_exposure (health)"] = regression3(df)
+
+    comparison_table(results)
 
     print(f"\n{'=' * 70}")
     print("  Done.")
