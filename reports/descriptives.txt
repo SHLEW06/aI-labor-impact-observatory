@@ -1,5 +1,5 @@
 AI Labor Impact Observatory — Descriptive Statistics
-Generated: 2026-06-29 02:15
+Generated: 2026-07-03 08:14
 Mart rows: 798
 
 ======================================================================
@@ -54,22 +54,22 @@ tot_emp    714 193046 446117   220 14435 45800 156255 3897860
 15  31-9094                        Medical Transcriptionists                0.8750
 
   BOTTOM 15:
-   soc_code                                                              soc_title  theoretical_exposure
-1   47-3012                                                    Helpers--Carpenters                0.0000
-2   49-3022                              Automotive Glass Installers and Repairers                0.0000
-3   47-5041                                    Continuous Mining Machine Operators                0.0000
-4   47-5081                                            Helpers--Extraction Workers                0.0000
-5   47-5022  Excavating and Loading Machine and Dragline Operators, Surface Mining                0.0000
-6   31-1132                                                              Orderlies                0.0000
-7   49-3052                                                   Motorcycle Mechanics                0.0000
-8   45-2091                                       Agricultural Equipment Operators                0.0000
-9   51-9031                                             Cutters and Trimmers, Hand                0.0000
-10  51-9111                    Packaging and Filling Machine Operators and Tenders                0.0000
-11  47-2053                                         Terrazzo Workers and Finishers                0.0000
-12  51-3023                                          Slaughterers and Meat Packers                0.0000
-13  49-9051                         Electrical Power-Line Installers and Repairers                0.0000
-14  53-7031                                                       Dredge Operators                0.0000
-15  51-9123                              Painting, Coating, and Decorating Workers                0.0000
+   soc_code                                                                    soc_title  theoretical_exposure
+1   37-2012                                              Maids and Housekeeping Cleaners                0.0000
+2   47-3012                                                          Helpers--Carpenters                0.0000
+3   53-7073                                                             Wellhead Pumpers                0.0000
+4   47-2053                                               Terrazzo Workers and Finishers                0.0000
+5   49-3052                                                         Motorcycle Mechanics                0.0000
+6   47-5081                                                  Helpers--Extraction Workers                0.0000
+7   47-3011  Helpers--Brickmasons, Blockmasons, Stonemasons, and Tile and Marble Setters                0.0000
+8   47-5041                                          Continuous Mining Machine Operators                0.0000
+9   47-5071                                                     Roustabouts, Oil and Gas                0.0000
+10  49-9045                           Refractory Materials Repairers, Except Brickmasons                0.0000
+11  45-2091                                             Agricultural Equipment Operators                0.0000
+12  51-3023                                                Slaughterers and Meat Packers                0.0000
+13  51-9031                                                   Cutters and Trimmers, Hand                0.0000
+14  27-2021                                              Athletes and Sports Competitors                0.0000
+15  47-5043                                                         Roof Bolters, Mining                0.0000
 
 ======================================================================
   TOP 15 / BOTTOM 15: Observed Exposure (AEI)
@@ -94,22 +94,22 @@ tot_emp    714 193046 446117   220 14435 45800 156255 3897860
 15  27-3042                                                                             Technical Writers             0.4747
 
   BOTTOM 15:
-   soc_code                                                                                    soc_title  observed_exposure
-1   51-3011                                                                                       Bakers             0.0000
-2   47-2021                                                                  Brickmasons and Blockmasons             0.0000
-3   45-4011                                                              Forest and Conservation Workers             0.0000
-4   17-3021                           Aerospace Engineering and Operations Technologists and Technicians             0.0000
-5   43-9051                                Mail Clerks and Mail Machine Operators, Except Postal Service             0.0000
-6   43-5071                                                    Shipping, Receiving, and Inventory Clerks             0.0000
-7   51-4072  Molding, Coremaking, and Casting Machine Setters, Operators, and Tenders, Metal and Plastic             0.0000
-8   51-4071                                                                  Foundry Mold and Coremakers             0.0000
-9   51-4041                                                                                   Machinists             0.0000
-10  51-4035               Milling and Planing Machine Setters, Operators, and Tenders, Metal and Plastic             0.0000
-11  51-4032          Drilling and Boring Machine Tool Setters, Operators, and Tenders, Metal and Plastic             0.0000
-12  51-4023                           Rolling Machine Setters, Operators, and Tenders, Metal and Plastic             0.0000
-13  51-3022                                                 Meat, Poultry, and Fish Cutters and Trimmers             0.0000
-14  51-3021                                                                    Butchers and Meat Cutters             0.0000
-15  11-1031                                                                                  Legislators             0.0000
+   soc_code                                         soc_title  observed_exposure
+1   53-7071  Gas Compressor and Gas Pumping Station Operators             0.0000
+2   53-7041                         Hoist and Winch Operators             0.0000
+3   35-2015                                Cooks, Short Order             0.0000
+4   37-2012                   Maids and Housekeeping Cleaners             0.0000
+5   39-3012      Gambling and Sports Book Writers and Runners             0.0000
+6   39-4031    Morticians, Undertakers, and Funeral Arrangers             0.0000
+7   41-2022                                Parts Salespersons             0.0000
+8   41-2012        Gambling Change Persons and Booth Cashiers             0.0000
+9   39-5093                                        Shampooers             0.0000
+10  39-3031       Ushers, Lobby Attendants, and Ticket Takers             0.0000
+11  37-3011            Landscaping and Groundskeeping Workers             0.0000
+12  39-5094                              Skincare Specialists             0.0000
+13  19-1012                 Food Scientists and Technologists             0.0000
+14  17-2131                               Materials Engineers             0.0000
+15  51-4194             Tool Grinders, Filers, and Sharpeners             0.0000
 
 ======================================================================
   HEALTH-SECTOR ANALYSIS (SOC groups 29 + 31)
@@ -159,6 +159,11 @@ soc_code                       soc_title  admin_share  clinical_share  observed_
  29-1081                     Podiatrists       0.0780          0.5520             0.0000
  31-1121               Home Health Aides       0.0752          0.5396                NaN
  31-9011              Massage Therapists       0.0764          0.4673             0.0000
+
+  Pairwise correlations within health (Pearson, r):
+    r(admin_share, observed_exposure) = +0.756   [n = 81]
+    r(clinical_share, observed_exposure) = -0.365   [n = 81]
+    r(admin_share, theoretical_exposure) = +0.558   [n = 81]
 
 ======================================================================
   EXPOSURE BY JOB ZONE (education proxy)

@@ -119,6 +119,19 @@ def health_sector(df: pd.DataFrame) -> None:
         print(clinical_heavy[["soc_code", "soc_title", "admin_share", "clinical_share",
                               "observed_exposure"]].head(5).to_string(index=False, float_format="{:.4f}".format))
 
+    # Pairwise correlations within health (backing the README/memo headline)
+    print("\n  Pairwise correlations within health (Pearson, r):")
+    corr_sample = h[h["observed_exposure"].notna()].copy()
+    pairs = [
+        ("admin_share",    "observed_exposure"),
+        ("clinical_share", "observed_exposure"),
+        ("admin_share",    "theoretical_exposure"),
+    ]
+    n_corr = len(corr_sample)
+    for x, y in pairs:
+        r = corr_sample[[x, y]].corr().iloc[0, 1]
+        print(f"    r({x}, {y}) = {r:+.3f}   [n = {n_corr}]")
+
 
 def exposure_by_job_zone(df: pd.DataFrame) -> None:
     section("EXPOSURE BY JOB ZONE (education proxy)")
