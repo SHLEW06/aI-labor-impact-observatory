@@ -143,7 +143,7 @@ def comparison_table(rows: list[dict]) -> None:
     print("Cells: coef (SE) [p]. Sample is common across (a)-(d) within each spec.")
     print(f"Estimator: OLS or WLS (employment-weighted, weights={CANONICAL_WEIGHTS}).")
     print(f"SEs: {CANONICAL_COV} (robust).")
-    print(f"Canonical spec for memo: (c) → (d) — both WLS.\n")
+    print("Canonical spec for memo: (c) → (d) — both WLS.\n")
 
     for rec in rows:
         spec = rec["spec"]
@@ -189,8 +189,12 @@ def headline_check(rows: list[dict]) -> None:
     if fc is None or fd is None:
         print("  [SKIP] missing fits")
         return
-    coef_c = fc.params["admin_share"]; se_c = fc.bse["admin_share"]; p_c = fc.pvalues["admin_share"]
-    coef_d = fd.params["admin_share"]; se_d = fd.bse["admin_share"]; p_d = fd.pvalues["admin_share"]
+    coef_c = fc.params["admin_share"]
+    se_c = fc.bse["admin_share"]
+    p_c = fc.pvalues["admin_share"]
+    coef_d = fd.params["admin_share"]
+    se_d = fd.bse["admin_share"]
+    p_d = fd.pvalues["admin_share"]
     print(f"  n = {n}  (all health SOCs with observed_exposure, a_median, tot_emp)")
     print(f"  (c) WLS no-wage : admin_share = {coef_c:+.4f}  (SE {se_c:.4f}, p {p_c:.4f})  R²={fc.rsquared:.4f}")
     print(f"  (d) WLS + wage  : admin_share = {coef_d:+.4f}  (SE {se_d:.4f}, p {p_d:.4f})  R²={fd.rsquared:.4f}")

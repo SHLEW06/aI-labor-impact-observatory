@@ -56,9 +56,6 @@ class TestCrosswalkIntegrity:
 
     def test_soc_code_format(self, crosswalk_df):
         """All SOC codes should match XX-XXXX pattern."""
-        import re
-
-        pattern = re.compile(r"^\d{2}-\d{4}$")
         bad = crosswalk_df[~crosswalk_df["soc_code"].str.match(r"^\d{2}-\d{4}$")]
         assert len(bad) == 0, f"Invalid SOC codes: {bad['soc_code'].tolist()[:10]}"
 
