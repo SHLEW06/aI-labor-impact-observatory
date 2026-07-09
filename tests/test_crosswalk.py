@@ -20,6 +20,11 @@ from crosswalk import load_crosswalk, map_onet_to_soc, validate_crosswalk
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = PROJECT_ROOT / "warehouse" / "aei.duckdb"
 
+# Skip the entire module when the warehouse hasn't been built (e.g. in CI).
+pytestmark = pytest.mark.skipif(
+    not DB_PATH.exists(), reason=f"Warehouse not found at {DB_PATH}"
+)
+
 
 @pytest.fixture(scope="module")
 def con():
